@@ -247,7 +247,7 @@ fixtures = [
                 [
                     "name", "in", [
                         "Delivery Request-custom_payment_schedule",
-                        "Delivery Request-custom_section_break_"
+                        "Delivery Request-custom_section_break_",
                         "Delivery Request-workflow_state1"
                     ]
                ]

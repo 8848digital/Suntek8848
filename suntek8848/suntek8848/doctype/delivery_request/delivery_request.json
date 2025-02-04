@@ -15,7 +15,6 @@
   "table",
   "column_break_vdy5",
   "payment_received_",
-  "amended_from",
   "target_date",
   "remarks",
   "amended_from"
@@ -108,7 +107,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-04 12:15:07.426590",
+ "modified": "2025-02-04 19:05:23.503359",
  "modified_by": "Administrator",
  "module": "Suntek8848",
  "name": "Delivery Request",

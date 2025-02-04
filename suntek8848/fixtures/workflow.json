@@ -4,7 +4,7 @@
   "doctype": "Workflow",
   "document_type": "Delivery Request",
   "is_active": 1,
-  "modified": "2025-02-03 17:51:17.551842",
+  "modified": "2025-02-04 16:19:29.382939",
   "name": "Delivery Request",
   "override_status": 0,
   "send_email_alert": 0,
@@ -73,7 +73,7 @@
   "transitions": [
    {
     "action": "Submit",
-    "allow_self_approval": 1,
+    "allow_self_approval": 0,
     "allowed": "Sales Manager",
     "condition": null,
     "next_state": "Submit",
@@ -85,7 +85,7 @@
    },
    {
     "action": "Approve",
-    "allow_self_approval": 1,
+    "allow_self_approval": 0,
     "allowed": "Accounts Manager",
     "condition": null,
     "next_state": "Approved",
@@ -97,7 +97,7 @@
    },
    {
     "action": "Reject",
-    "allow_self_approval": 1,
+    "allow_self_approval": 0,
     "allowed": "Accounts Manager",
     "condition": null,
     "next_state": "Rejected",

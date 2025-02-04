@@ -72,16 +72,6 @@
    "label": "payment received %"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Delivery Request",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
    "fieldname": "target_date",
    "fieldtype": "Date",
    "label": "Target date",

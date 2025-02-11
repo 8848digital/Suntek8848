@@ -43,8 +43,8 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"doctype" : "public/js/sales_order.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_js = {"Sales Order" : "public/js/sales_order.js"}
+# doctype_list_js = {"Delivery Request" : "public/js/delivery_request_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -137,13 +137,17 @@ doctype_js = {"doctype" : "public/js/sales_order.js"}
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Delivery Request": {
+        "on_submit": "suntek8848.suntek8848.doctype.delivery_request.delivery_request.update_sales_order",
+		"on_update_after_submit": "suntek8848.suntek8848.doctype.delivery_request.delivery_request.update_approver_field",
+		# "on_cancel": "method",
+		# "on_trash": "method"
+	},
+    "Sales Order": {
+        "validate": "suntek8848.suntek8848.doc_events.sales_order.update_outstanding_amount",
+	}
+}
 
 # Scheduled Tasks
 # ---------------
@@ -248,7 +252,11 @@ fixtures = [
                     "name", "in", [
                         "Delivery Request-custom_payment_schedule",
                         "Delivery Request-custom_section_break_",
-                        "Delivery Request-workflow_state1"
+                        "Delivery Request-workflow_state1",
+                        "Delivery Request-custom_delivery_reason",
+                        "Delivery Request-custom_payment_from_sales_order",
+                        "Delivery Request-custom_approver",
+                        "Sales Order-custom_outstanding"
                     ]
                ]
         ]},
@@ -262,7 +270,10 @@ fixtures = [
         {"dt": "Property Setter", "filters": [
             [
                 "name", "in", [
-                    "Delivery Request-custom_section_break_-depends_on"
+                    "Delivery Request-custom_section_break_-depends_on",
+                    "Sales Order-payment_schedule-allow_on_submit",
+                    "Sales Order-custom_outstanding-in_list_view",
+                    "Delivery Request-custom_approver-in_list_view"
                 ]
             ]
         ]}

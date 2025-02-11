@@ -1,18 +1,50 @@
 [
  {
   "default_value": null,
+  "doc_type": "Sales Order",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "payment_schedule",
+  "is_system_generated": 0,
+  "modified": "2025-02-11 10:43:02.806379",
+  "module": null,
+  "name": "Sales Order-payment_schedule-allow_on_submit",
+  "property": "allow_on_submit",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
+ },
+ {
+  "default_value": null,
   "doc_type": "Delivery Request",
   "docstatus": 0,
   "doctype": "Property Setter",
   "doctype_or_field": "DocField",
-  "field_name": "custom_section_break_",
-  "is_system_generated": 0,
-  "modified": "2025-02-04 16:27:04.036262",
+  "field_name": "custom_approver",
+  "is_system_generated": 1,
+  "modified": "2025-02-07 14:10:25.202037",
   "module": null,
-  "name": "Delivery Request-custom_section_break_-depends_on",
-  "property": "depends_on",
-  "property_type": "Data",
+  "name": "Delivery Request-custom_approver-in_list_view",
+  "property": "in_list_view",
+  "property_type": "Check",
   "row_name": null,
-  "value": "eval: !frappe.user.has_role(\"Stock User\")"
+  "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Sales Order",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "custom_outstanding",
+  "is_system_generated": 1,
+  "modified": "2025-02-10 11:35:09.360739",
+  "module": null,
+  "name": "Sales Order-custom_outstanding-in_list_view",
+  "property": "in_list_view",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
  }
 ]

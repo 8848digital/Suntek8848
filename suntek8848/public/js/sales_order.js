@@ -27,5 +27,7 @@ frappe.ui.form.on("Sales Order", {
         } else {
             frm.dashboard.add_section("<p>No Project Linked. Cannot filter Delivery Requests.</p>");
         }
+        
+        frm.get_field('payment_schedule').grid.cannot_add_rows = true;
     }
 });

@@ -117,9 +117,9 @@ doctype_js = {"Sales Order" : "public/js/sales_order.js"}
 # -----------
 # Permissions evaluated in scripted ways
 
-# permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
-# }
+permission_query_conditions = {
+	"Delivery Request": "suntek8848.suntek8848.permissions.delivery_request.update_permissions",
+}
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
@@ -250,10 +250,10 @@ fixtures = [
         {"dt": "Custom Field", "filters": [
                 [
                     "name", "in", [
-                        "Delivery Request-custom_payment_schedule",
+                        "Delivery Request-custom_payment_schedules",
                         "Delivery Request-custom_section_break_",
                         "Delivery Request-workflow_state1",
-                        "Delivery Request-custom_delivery_reason",
+                        "Delivery Request-custom_delivery_request_purpose",
                         "Delivery Request-custom_payment_from_sales_order",
                         "Delivery Request-custom_approver",
                         "Sales Order-custom_outstanding"

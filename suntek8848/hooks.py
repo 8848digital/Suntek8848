@@ -43,7 +43,9 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Sales Order" : "public/js/sales_order.js"}
+doctype_js = {"Sales Order" : "public/js/sales_order.js",
+              "Employee Advance" : "public/js/employee_advance.js",
+              "Expense Claim": "public/js/expense_claim.js"}
 # doctype_list_js = {"Delivery Request" : "public/js/delivery_request_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -178,9 +180,9 @@ doc_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "suntek8848.event.get_events"
-# }
+override_whitelisted_methods = {
+	"hrms.hr.doctype.expense_claim.expense_claim.get_advances": "suntek8848.suntek8848.overrides.expense_claim.get_advances"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
@@ -256,7 +258,10 @@ fixtures = [
                         "Delivery Request-custom_delivery_request_purpose",
                         "Delivery Request-custom_payment_from_sales_order",
                         "Delivery Request-custom_approver",
-                        "Sales Order-custom_outstanding"
+                        "Sales Order-custom_outstanding",
+                        "Employee Advance-custom_column_break_crsgc",
+                        "Employee Advance-custom_advance_type",
+                        "Company-custom_default_employee_other_expense_account"
                     ]
                ]
         ]},
@@ -273,7 +278,9 @@ fixtures = [
                     "Delivery Request-custom_section_break_-depends_on",
                     "Sales Order-payment_schedule-allow_on_submit",
                     "Sales Order-custom_outstanding-in_list_view",
-                    "Delivery Request-custom_approver-in_list_view"
+                    "Delivery Request-custom_approver-in_list_view",
+                    "Employee Advance-advance_account-default",
+                    "Employee Advance-advance_account-fetch_from"
                 ]
             ]
         ]}

@@ -261,7 +261,8 @@ fixtures = [
                         "Sales Order-custom_outstanding",
                         "Employee Advance-custom_column_break_crsgc",
                         "Employee Advance-custom_advance_type",
-                        "Company-custom_default_employee_other_expense_account"
+                        "Company-custom_default_employee_other_expense_account",
+                        "Delivery Payment-custom_sales_amount"
                     ]
                ]
         ]},

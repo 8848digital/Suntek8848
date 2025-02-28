@@ -14,7 +14,7 @@ class DeliveryRequest(Document):
 
 @frappe.whitelist()
 def fetch_sales_payments(project):
-	get_sales_order = frappe.db.get_all('Sales Order', {'project': project, 'docstatus': 1}, ['name'])
+	get_sales_order = frappe.db.get_all('Sales Order', {'project': project, 'docstatus': 1}, ['name', 'rounded_total'])
 
 	if get_sales_order:
 		for val in get_sales_order:
@@ -22,7 +22,7 @@ def fetch_sales_payments(project):
 					filters={"parent": val['name']}, 
 					fields="*"
 				)
-			return payments
+			return payments, val['rounded_total']
 	
 def update_sales_order(doc, method=None):
 	sales_orders = frappe.get_all("Sales Order", filters={"project": doc.custom_project, "docstatus": 1}, fields=["name"])

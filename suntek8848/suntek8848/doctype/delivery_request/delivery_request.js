@@ -4,7 +4,7 @@
 frappe.ui.form.on("Delivery Request", {
 	refresh(frm) {
         frm.add_custom_button('Get Sales Order Terms', function() {
-            if (frm.doc.custom_payment_from_sales_order.length <1){
+            if (frm.doc.docstatus == 0){
                 frappe.call({
                     method: "suntek8848.suntek8848.doctype.delivery_request.delivery_request.fetch_sales_payments",
                     args: {
@@ -12,6 +12,7 @@ frappe.ui.form.on("Delivery Request", {
                     },
                     callback: function(response) {
                         console.log(response)
+                        frm.clear_table("custom_payment_from_sales_order");
                         response.message[0].forEach(row => {
                             
                             let child = frm.add_child("custom_payment_from_sales_order");

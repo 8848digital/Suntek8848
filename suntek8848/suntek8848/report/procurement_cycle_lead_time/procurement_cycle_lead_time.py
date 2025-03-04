@@ -11,31 +11,43 @@ def execute(filters=None):
     columns = get_columns()
     data = get_data(filters)
 
+    if data:
+        for val in data:
+            if val['grn'] == None and val['po_date']:
+                dates = (frappe.utils.getdate() - val['po_date'])
+                val['po_to_pr_days'] = dates/ 24
+            if val['purchase_order'] == None:
+                dates = (frappe.utils.getdate() - val['transaction_date'])
+                val['mr_to_po_days'] = dates/ 24
+                val['po_to_pr_days'] = dates/ 24
+
+    
+
     return columns, data
 
 def get_columns():
     return [
-        {"label": _("Material Request ID"), "fieldname": "material_request", "fieldtype": "Link", "options": "Material Request", "width": 150},
-        {"label": _("Date"), "fieldname": "transaction_date", "fieldtype": "Date", "width": 100},
-        {"label": _("Required by"), "fieldname": "schedule_date", "fieldtype": "Date", "width": 120},
-        {"label": _("Item Code"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 150},
-        {"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 150},
+        {"label": _("Company"), "fieldname": "company", "fieldtype": "Data", "width": 200},
+        {"label": _("Material Request ID"), "fieldname": "material_request", "fieldtype": "Link", "options": "Material Request", "width": 200},
+        {"label": _("Date"), "fieldname": "transaction_date", "fieldtype": "Date", "width": 200},
+        {"label": _("Required by"), "fieldname": "schedule_date", "fieldtype": "Date", "width": 200},
+        {"label": _("Item Code"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 200},
+        {"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 200},
         {"label": _("Description"), "fieldname": "description", "fieldtype": "Data", "width": 200},
-        {"label": _("Warehouse"), "fieldname": "warehouse", "fieldtype": "Link", "options": "Warehouse", "width": 150},
+        {"label": _("Warehouse"), "fieldname": "warehouse", "fieldtype": "Link", "options": "Warehouse", "width": 200},
+        {"label": _("MR Qty"), "fieldname": "qty", "fieldtype": "Float", "width": 200},
         {"label": _("UOM"), "fieldname": "stock_uom", "fieldtype": "Data", "width": 80},
-        {"label": _("Qty"), "fieldname": "qty", "fieldtype": "Float", "width": 100},
-        {"label": _("Stock Qty in UOM"), "fieldname": "stock_qty", "fieldtype": "Float", "width": 100},
-        {"label": _("Ordered Qty"), "fieldname": "min_order_qty", "fieldtype": "Float", "width": 100},
-        {"label": _("Received Qty"), "fieldname": "received_qty", "fieldtype": "Float", "width": 100},
-        {"label": _("Qty to Receive"), "fieldname": "po_vs_pr_diff", "fieldtype": "Float", "width": 100},
-        {"label": _("Company"), "fieldname": "company", "fieldtype": "Data", "width": 100},
-        {"label": _("Pending PO Qty"), "fieldname": "mr_vs_po_diff", "fieldtype": "Float", "width": 100},
-        {"label": _("PO No"), "fieldname": "purchase_order", "fieldtype": "Data", "width": 100},
-        {"label": _("PO Creation Date"), "fieldname": "po_date", "fieldtype": "Date", "width": 100},
-        {"label": _("GRN No"), "fieldname": "grn", "fieldtype": "Data", "width": 100},
-        {"label": _("GRN Date"), "fieldname": "grn_date", "fieldtype": "Date", "width": 100},
-        {"label": _("MR to PO Lead time"), "fieldname": "mr_to_po_days", "fieldtype": "Int", "width": 100},
-        {"label": _("PO to GRN lead time"), "fieldname": "po_to_pr_days", "fieldtype": "Int", "width": 100},
+        # {"label": _("Stock Qty in UOM"), "fieldname": "stock_qty", "fieldtype": "Float", "width": 100},
+        {"label": _("Ordered Qty"), "fieldname": "po_qty", "fieldtype": "Float", "width": 200},
+        {"label": _("Received Qty"), "fieldname": "received_qty", "fieldtype": "Float", "width": 200},
+        {"label": _("Qty to Receive"), "fieldname": "po_vs_pr_diff", "fieldtype": "Float", "width": 200},
+        {"label": _("Pending PO Qty"), "fieldname": "mr_vs_po_diff", "fieldtype": "Float", "width": 200},
+        {"label": _("PO No"), "fieldname": "purchase_order", "fieldtype": "Link", "options": "Purchase Order", "width": 200},
+        {"label": _("PO Creation Date"), "fieldname": "po_date", "fieldtype": "Date", "width": 200},
+        {"label": _("GRN No"), "fieldname": "grn", "fieldtype": "Link", "options": "Purchase Receipt", "width": 200},
+        {"label": _("GRN Date"), "fieldname": "grn_date", "fieldtype": "Date", "width": 200},
+        {"label": _("MR to PO Lead Days"), "fieldname": "mr_to_po_days", "fieldtype": "Int", "width": 250},
+        {"label": _("PO to GRN lead Days"), "fieldname": "po_to_pr_days", "fieldtype": "Int", "width": 250},
     ]
 
 def get_data(filters):
@@ -58,6 +70,14 @@ def get_data(filters):
         conditions.append("mri.warehouse = %(warehouse)s")
         params["warehouse"] = filters["warehouse"]
 
+    if filters.get("purchase_order"):
+        conditions.append("po.name = %(purchase_order)s")
+        params["purchase_order"] = filters["purchase_order"]
+
+    if filters.get("purchase_receipt"):
+        conditions.append("pr.name = %(purchase_receipt)s")
+        params["purchase_receipt"] = filters["purchase_receipt"]
+
     where_clause = " AND ".join(conditions) if conditions else "1=1"
 
     query = f"""
@@ -71,9 +91,8 @@ def get_data(filters):
             mri.qty,
             mri.stock_uom,
             mri.warehouse,
-            mri.stock_qty,
-            mri.received_qty,
-            mri.min_order_qty,
+            pri.received_qty,
+            poi.qty AS po_qty,
             mr.company,
             po.name AS purchase_order,
             po.transaction_date AS po_date,

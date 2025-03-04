@@ -29,6 +29,7 @@ def get_columns():
     return [
         {"label": _("Company"), "fieldname": "company", "fieldtype": "Data", "width": 200},
         {"label": _("Material Request ID"), "fieldname": "material_request", "fieldtype": "Link", "options": "Material Request", "width": 200},
+        {"label": _("Purpose Type"), "fieldname": "material_request_type", "fieldtype": "Data", "width": 200},
         {"label": _("Date"), "fieldname": "transaction_date", "fieldtype": "Date", "width": 200},
         {"label": _("Required by"), "fieldname": "schedule_date", "fieldtype": "Date", "width": 200},
         {"label": _("Item Code"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 200},
@@ -84,6 +85,7 @@ def get_data(filters):
         SELECT 
             mr.name AS material_request,
             mr.transaction_date,
+            mr.material_request_type,
             mri.schedule_date,
             mri.item_code,
             mri.item_name,

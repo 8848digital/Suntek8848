@@ -33,23 +33,31 @@ frappe.ui.form.on("Delivery Request", {
             }
             
         });
+        frm.fields_dict.custom_payment_schedule.grid.update_docfield_property("payment_amount", "read_only", 1);
+        frm.fields_dict.custom_payment_schedule.grid.update_docfield_property("payment_term", "reqd", 1);
+        
 	},
+    validate: function(frm) {
+        if (frm.doc.custom_payment_schedule.length > 0){
+            let total_payment = 0;
+            frm.doc.custom_payment_schedule.forEach(r => {
+                total_payment += r.payment_amount || 0;
+            });
+
+            let sales_amount = frm.doc.custom_payment_from_sales_order[0].custom_sales_amount || 0;
+
+            if (total_payment != sales_amount) {
+                frappe.throw(`Total Delivery payment (${total_payment}) mismatch with Sales Order amount (${sales_amount})`);
+            }
+        }
+    }
 });
 
 frappe.ui.form.on('Payment Schedule', {
-    payment_amount: function(frm, cdt, cdn) {
+    invoice_portion: function(frm, cdt, cdn){
         let row = locals[cdt][cdn];
-
-        let total_payment = 0;
-        frm.doc.custom_payment_schedule.forEach(r => {
-            total_payment += r.payment_amount || 0;
-        });
-
         let sales_amount = frm.doc.custom_payment_from_sales_order[0].custom_sales_amount || 0;
-
-        if (total_payment > sales_amount) {
-            frappe.msgprint(`Total Delivery payment cannot exceed Sales Order amount (${sales_amount})`);
-            frappe.model.set_value(cdt, cdn, 'payment_amount', 0);
-        }
+        remaining_amount = (sales_amount * row.invoice_portion) /100
+        frappe.model.set_value(cdt, cdn, 'payment_amount', remaining_amount);
     }
 });

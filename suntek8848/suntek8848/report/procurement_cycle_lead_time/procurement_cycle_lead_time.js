@@ -26,6 +26,18 @@ frappe.query_reports["Procurement Cycle Lead time"] = {
             "label": __("Warehouse"),
             "fieldtype": "Link",
             "options": "Warehouse"
+        },
+        {
+            "fieldname": "purchase_order",
+            "label": __("Purchase Order"),
+            "fieldtype": "Link",
+            "options": "Purchase Order"
+        },
+        {
+            "fieldname": "purchase_receipt",
+            "label": __("Purchase Receipt"),
+            "fieldtype": "Link",
+            "options": "Purchase Receipt"
         }
     ]
 };

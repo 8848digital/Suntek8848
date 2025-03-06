@@ -56,8 +56,23 @@ frappe.ui.form.on("Delivery Request", {
 frappe.ui.form.on('Payment Schedule', {
     invoice_portion: function(frm, cdt, cdn){
         let row = locals[cdt][cdn];
-        let sales_amount = frm.doc.custom_payment_from_sales_order[0].custom_sales_amount || 0;
-        remaining_amount = (sales_amount * row.invoice_portion) /100
-        frappe.model.set_value(cdt, cdn, 'payment_amount', remaining_amount);
+        if (frm.doc.custom_payment_from_sales_order.length > 0){
+            let sales_amount = frm.doc.custom_payment_from_sales_order[0].custom_sales_amount || 0;
+            remaining_amount = (sales_amount * row.invoice_portion) /100
+            frappe.model.set_value(cdt, cdn, 'payment_amount', remaining_amount)
+        }else{
+            frappe.call({
+                method: "suntek8848.suntek8848.doctype.delivery_request.delivery_request.fetch_sales_payments",
+                args: {
+                    project: frm.doc.custom_project
+                },
+                callback: function(response) {
+                    console.log(response)
+                    let sales_amount = response.message[1]|| 0;
+                    remaining_amount = (sales_amount * row.invoice_portion) /100
+                    frappe.model.set_value(cdt, cdn, 'payment_amount', remaining_amount)
+                }
+            });
+        }
     }
 });

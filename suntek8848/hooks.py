@@ -141,14 +141,18 @@ permission_query_conditions = {
 
 doc_events = {
 	"Delivery Request": {
-        "on_submit": "suntek8848.suntek8848.doctype.delivery_request.delivery_request.update_sales_order",
-		"on_update_after_submit": "suntek8848.suntek8848.doctype.delivery_request.delivery_request.update_approver_field",
-		# "on_cancel": "method",
-		# "on_trash": "method"
+        # "on_submit": "suntek8848.suntek8848.doctype.delivery_request.delivery_request.update_sales_order",
+		"on_update_after_submit": "suntek8848.suntek8848.doctype.delivery_request.delivery_request.update_sales_order",
+		"on_cancel": "suntek8848.suntek8848.doctype.delivery_request.delivery_request.on_cancel",
+		"validate": "suntek8848.suntek8848.doctype.delivery_request.delivery_request.on_validate",
 	},
     "Sales Order": {
         "validate": "suntek8848.suntek8848.doc_events.sales_order.update_outstanding_amount",
-	}
+	},
+    "Stock Entry": {
+        "on_submit": "suntek8848.suntek8848.doc_events.work_order.update_sales_order_status",
+        "on_cancel": "suntek8848.suntek8848.doc_events.work_order.update_sales_order_status",
+    }
 }
 
 # Scheduled Tasks
@@ -262,7 +266,8 @@ fixtures = [
                         "Employee Advance-custom_column_break_crsgc",
                         "Employee Advance-custom_advance_type",
                         "Company-custom_default_employee_other_expense_account",
-                        "Delivery Payment-custom_sales_amount"
+                        "Delivery Payment-custom_sales_amount",
+                        "Sales Order-custom_dispatch_status"
                     ]
                ]
         ]},

@@ -16,7 +16,8 @@
   "column_break_vdy5",
   "payment_received_",
   "target_date",
-  "remarks"
+  "remarks",
+  "amended_from"
  ],
  "fields": [
   {
@@ -81,12 +82,18 @@
    "fieldtype": "Small Text",
    "label": "Remarks ",
    "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Delivery Request"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-06 12:25:48.125381",
+ "modified": "2025-03-06 12:24:00.163955",
  "modified_by": "Administrator",
  "module": "Suntek8848",
  "name": "Delivery Request",

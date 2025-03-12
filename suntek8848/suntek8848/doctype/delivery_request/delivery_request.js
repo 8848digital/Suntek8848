@@ -86,7 +86,9 @@ frappe.ui.form.on("Delivery Request", {
     },
     custom_delivery_request_purpose: function(frm){
         if (frm.doc.custom_delivery_request_purpose == 'Revised Payment Schedule'){
-            frm.trigger('custom_project')
+            if(frm.doc.custom_project){
+                frm.trigger('custom_project')
+            }
         }
     },
     before_workflow_action: function (frm) {

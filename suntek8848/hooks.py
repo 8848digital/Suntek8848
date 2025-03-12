@@ -192,7 +192,7 @@ override_whitelisted_methods = {
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {
-# 	"Task": "suntek8848.task.get_dashboard_data"
+# 	"Sales Order": "suntek8848.suntek8848.doc_events.sales_order.get_data"
 # }
 
 # exempt linked doctypes from being automatically cancelled
@@ -267,7 +267,9 @@ fixtures = [
                         "Employee Advance-custom_advance_type",
                         "Company-custom_default_employee_other_expense_account",
                         "Delivery Payment-custom_sales_amount",
-                        "Sales Order-custom_dispatch_status"
+                        "Sales Order-custom_dispatch_status",
+                        "Sales Order-custom_advance_amount",
+                        "Sales Invoice-custom_advance_payment"
                     ]
                ]
         ]},
@@ -286,7 +288,8 @@ fixtures = [
                     "Sales Order-custom_outstanding-in_list_view",
                     "Delivery Request-custom_approver-in_list_view",
                     "Employee Advance-advance_account-default",
-                    "Employee Advance-advance_account-fetch_from"
+                    "Employee Advance-advance_account-fetch_from",
+                    "Sales Invoice-payment_schedule-allow_on_submit"
                 ]
             ]
         ]}

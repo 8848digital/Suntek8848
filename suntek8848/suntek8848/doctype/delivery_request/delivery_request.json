@@ -16,7 +16,10 @@
   "column_break_vdy5",
   "payment_received_",
   "target_date",
+  "sales_order",
+  "sales_order_amount",
   "remarks",
+  "cancel_reason",
   "amended_from"
  ],
  "fields": [
@@ -69,7 +72,8 @@
   {
    "fieldname": "payment_received_",
    "fieldtype": "Float",
-   "label": "payment received %"
+   "label": "Payment received %",
+   "mandatory_depends_on": "eval:doc.custom_delivery_request_purpose == 'Revised Payment Schedule'"
   },
   {
    "fieldname": "target_date",
@@ -88,12 +92,33 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "options": "Delivery Request"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "cancel_reason",
+   "fieldtype": "Text",
+   "label": "Reject Reason"
+  },
+  {
+   "depends_on": "eval:doc.custom_project",
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.sales_order",
+   "fieldname": "sales_order_amount",
+   "fieldtype": "Float",
+   "label": "Sales Order Amount",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-06 12:24:00.163955",
+ "modified": "2025-03-12 11:04:18.951236",
  "modified_by": "Administrator",
  "module": "Suntek8848",
  "name": "Delivery Request",

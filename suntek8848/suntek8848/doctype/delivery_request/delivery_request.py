@@ -145,3 +145,19 @@ def get_sales_invoices_from_sales_order(sales_order_name):
     )
     
     return [si["parent"] for si in sales_invoices]
+
+@frappe.whitelist()
+def get_paid_amount(sales_order):
+    payments = frappe.get_all(
+        "Payment Entry Reference",
+        filters={"reference_name": sales_order, "reference_doctype": "Sales Order"},
+        fields=["parent"]
+    )
+
+    total_paid = 0
+    for payment in payments:
+        payment_entry = frappe.get_doc("Payment Entry", payment.parent)
+        if payment_entry.docstatus == 1:
+            total_paid += payment_entry.paid_amount
+
+    return total_paid

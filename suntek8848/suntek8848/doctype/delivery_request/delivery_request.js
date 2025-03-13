@@ -117,17 +117,19 @@ frappe.ui.form.on("Delivery Request", {
 });
 
 function fetch_payment(frm){
-    frappe.call({
-        method: "suntek8848.suntek8848.doctype.delivery_request.delivery_request.get_paid_amount",
-        args: {
-            sales_order: frm.doc.sales_order
-        },
-        callback: function(response) {
-            frm.set_value('payment_received_', ((response.message)/frm.doc.sales_order_amount)*100)
-            frm.set_value('advance_payment', response.message)
-            frm.set_value('remaining_amount', (frm.doc.sales_order_amount - response.message))
-        }
-    });
+    if(frm.doc.sales_order){
+        frappe.call({
+            method: "suntek8848.suntek8848.doctype.delivery_request.delivery_request.get_paid_amount",
+            args: {
+                sales_order: frm.doc.sales_order
+            },
+            callback: function(response) {
+                frm.set_value('payment_received_', ((response.message)/frm.doc.sales_order_amount)*100)
+                frm.set_value('advance_payment', response.message)
+                frm.set_value('remaining_amount', (frm.doc.sales_order_amount - response.message))
+            }
+        });
+    }
 }
 
 frappe.ui.form.on('Payment Schedule', {

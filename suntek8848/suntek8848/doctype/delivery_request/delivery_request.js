@@ -83,7 +83,7 @@ frappe.ui.form.on("Delivery Request", {
             }
         }
     },
-    custom_project: function(frm){
+    custom_project: function(frm){   
         if (frm.doc.custom_delivery_request_purpose == 'Revised Payment Schedule'){
             frappe.call({
                 method: "suntek8848.suntek8848.doctype.delivery_request.delivery_request.fetch_sales_payments",
@@ -100,7 +100,6 @@ frappe.ui.form.on("Delivery Request", {
         }else{
             frm.set_value('sales_order', '')
             frm.set_value('sales_order_amount', '')
-            frm.set_value('advance_payment', '')
         }
     },
     custom_delivery_request_purpose: function(frm){
@@ -114,7 +113,7 @@ frappe.ui.form.on("Delivery Request", {
         if (frm.doc.workflow_state1 === "Approved by AM" || frm.doc.workflow_state1 === "Waiting for AM Approval" || frm.doc.workflow_state1 === "Waiting for SM Approval") {
             frm.toggle_display("cancel_reason", true);
         }
-    },
+    }
 });
 
 function fetch_payment(frm){
@@ -126,6 +125,7 @@ function fetch_payment(frm){
         callback: function(response) {
             frm.set_value('payment_received_', ((response.message)/frm.doc.sales_order_amount)*100)
             frm.set_value('advance_payment', response.message)
+            frm.set_value('remaining_amount', (frm.doc.sales_order_amount - response.message))
         }
     });
 }
@@ -150,5 +150,21 @@ frappe.ui.form.on('Payment Schedule', {
                 }
             });
         }
+        let total_payment = 0;
+        if (frm.doc.custom_payment_schedule.length > 0){
+            frm.doc.custom_payment_schedule.forEach(r => {
+                total_payment += r.payment_amount || 0;
+            });
+        }
+        frm.set_value('remaining_amount', ((frm.doc.sales_order_amount - frm.doc.advance_payment) - total_payment))
+    },
+    custom_payment_schedule_remove:function (frm, cdt, cdn) {
+        let total_payment = 0;
+        if (frm.doc.custom_payment_schedule.length > 0){
+            frm.doc.custom_payment_schedule.forEach(r => {
+                total_payment += r.payment_amount || 0;
+            });
+        }
+        frm.set_value('remaining_amount', ((frm.doc.sales_order_amount - frm.doc.advance_payment) - total_payment))
     }
 });

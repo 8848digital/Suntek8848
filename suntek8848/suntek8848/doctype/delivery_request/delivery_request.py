@@ -66,8 +66,8 @@ def update_sales_order(doc, method=None):
 				<tbody>
 					<tr>
 						<td style="padding: 5px;">Advance Amount</td>
-						<td style="padding: 5px;">{payment_received}</td>
-						<td style="padding: 5px;">{payment_amount}</td>
+						<td style="padding: 5px;">{round(float(payment_received), 2)}</td>
+						<td style="padding: 5px;">{round(float(payment_amount), 2)}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -148,16 +148,11 @@ def get_sales_invoices_from_sales_order(sales_order_name):
 
 @frappe.whitelist()
 def get_paid_amount(sales_order):
-    payments = frappe.get_all(
-        "Payment Entry Reference",
-        filters={"reference_name": sales_order, "reference_doctype": "Sales Order"},
-        fields=["parent"]
-    )
+	payments = frappe.db.get_value(
+		"Sales Order",
+		sales_order,
+		"advance_paid"
+	)
+	amount = payments if payments else 0
 
-    total_paid = 0
-    for payment in payments:
-        payment_entry = frappe.get_doc("Payment Entry", payment.parent)
-        if payment_entry.docstatus == 1:
-            total_paid += payment_entry.paid_amount
-
-    return total_paid
+	return amount

@@ -19,6 +19,7 @@
   "target_date",
   "sales_order",
   "sales_order_amount",
+  "remaining_amount",
   "remarks",
   "cancel_reason",
   "amended_from"
@@ -121,12 +122,18 @@
    "fieldtype": "Float",
    "label": "Advance Payment",
    "read_only": 1
+  },
+  {
+   "fieldname": "remaining_amount",
+   "fieldtype": "Float",
+   "label": "Remaining Amount",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-13 15:09:20.467380",
+ "modified": "2025-03-13 19:53:02.901271",
  "modified_by": "Administrator",
  "module": "Suntek8848",
  "name": "Delivery Request",

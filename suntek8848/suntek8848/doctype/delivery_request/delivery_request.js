@@ -2,6 +2,23 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Delivery Request", {
+    onload: function (frm) {
+        if (frm.doc.owner) {
+            frappe.call({
+                method: "frappe.client.get_list",
+                args: {
+                    doctype: "Employee",
+                    filters: { user_id: frm.doc.owner },
+                    fields: ["department"]
+                },
+                callback: function (r) {
+                    if (r.message.length > 0) {
+                        frm.set_value("department", r.message[0].department);
+                    }
+                }
+            });
+        }
+    },
 	refresh(frm) {
         if (!frm.doc.cancel_reason) {
             frm.toggle_display("cancel_reason", false);
@@ -41,7 +58,7 @@ frappe.ui.form.on("Delivery Request", {
                 frm.get_sales_order_terms();
             });
         }
-        frm.fields_dict.custom_payment_schedule.grid.update_docfield_property("payment_amount", "read_only", 1);
+        frm.fields_dict.custom_payment_schedule.grid.update_docfield_property("invoice_portion", "read_only", 1);
         frm.fields_dict.custom_payment_schedule.grid.update_docfield_property("payment_term", "reqd", 1);
         
 	},
@@ -79,30 +96,47 @@ frappe.ui.form.on("Delivery Request", {
                 }
             });
             frm.get_sales_order_terms();
+            fetch_payment(frm)
         }else{
             frm.set_value('sales_order', '')
             frm.set_value('sales_order_amount', '')
+            frm.set_value('advance_payment', '')
         }
     },
     custom_delivery_request_purpose: function(frm){
         if (frm.doc.custom_delivery_request_purpose == 'Revised Payment Schedule'){
-            frm.trigger('custom_project')
+            if(frm.doc.custom_project){
+                frm.trigger('custom_project')
+            }
         }
     },
     before_workflow_action: function (frm) {
-        if (frm.doc.workflow_state1 === "Approved by AM" || frm.doc.workflow_state1 === "Waiting for AM Approval") {
+        if (frm.doc.workflow_state1 === "Approved by AM" || frm.doc.workflow_state1 === "Waiting for AM Approval" || frm.doc.workflow_state1 === "Waiting for SM Approval") {
             frm.toggle_display("cancel_reason", true);
         }
-    }
+    },
 });
 
+function fetch_payment(frm){
+    frappe.call({
+        method: "suntek8848.suntek8848.doctype.delivery_request.delivery_request.get_paid_amount",
+        args: {
+            sales_order: frm.doc.sales_order
+        },
+        callback: function(response) {
+            frm.set_value('payment_received_', ((response.message)/frm.doc.sales_order_amount)*100)
+            frm.set_value('advance_payment', response.message)
+        }
+    });
+}
+
 frappe.ui.form.on('Payment Schedule', {
-    invoice_portion: function(frm, cdt, cdn){
+    payment_amount: function(frm, cdt, cdn){
         let row = locals[cdt][cdn];
         if (frm.doc.custom_payment_from_sales_order.length > 0){
             let sales_amount = frm.doc.custom_payment_from_sales_order[0].custom_sales_amount || 0;
-            remaining_amount = (sales_amount * row.invoice_portion) /100
-            frappe.model.set_value(cdt, cdn, 'payment_amount', remaining_amount)
+            remaining_per = (row.payment_amount / sales_amount) * 100
+            frappe.model.set_value(cdt, cdn, 'invoice_portion', remaining_per)
         }else{
             frappe.call({
                 method: "suntek8848.suntek8848.doctype.delivery_request.delivery_request.fetch_sales_payments",
@@ -110,10 +144,9 @@ frappe.ui.form.on('Payment Schedule', {
                     project: frm.doc.custom_project
                 },
                 callback: function(response) {
-                    console.log(response)
                     let sales_amount = response.message[1]|| 0;
-                    remaining_amount = (sales_amount * row.invoice_portion) /100
-                    frappe.model.set_value(cdt, cdn, 'payment_amount', remaining_amount)
+                    remaining_per = (row.payment_amount / sales_amount) * 100
+                    frappe.model.set_value(cdt, cdn, 'invoice_portion', remaining_per)
                 }
             });
         }

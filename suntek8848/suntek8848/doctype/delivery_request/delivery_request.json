@@ -15,6 +15,7 @@
   "table",
   "column_break_vdy5",
   "payment_received_",
+  "advance_payment",
   "target_date",
   "sales_order",
   "sales_order_amount",
@@ -73,7 +74,8 @@
    "fieldname": "payment_received_",
    "fieldtype": "Float",
    "label": "Payment received %",
-   "mandatory_depends_on": "eval:doc.custom_delivery_request_purpose == 'Revised Payment Schedule'"
+   "mandatory_depends_on": "eval:doc.custom_delivery_request_purpose == 'Revised Payment Schedule'",
+   "read_only": 1
   },
   {
    "fieldname": "target_date",
@@ -113,12 +115,18 @@
    "fieldtype": "Float",
    "label": "Sales Order Amount",
    "read_only": 1
+  },
+  {
+   "fieldname": "advance_payment",
+   "fieldtype": "Float",
+   "label": "Advance Payment",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-12 11:04:18.951236",
+ "modified": "2025-03-13 15:09:20.467380",
  "modified_by": "Administrator",
  "module": "Suntek8848",
  "name": "Delivery Request",

@@ -74,7 +74,7 @@ def update_sales_order(doc, method=None):
 		</div>
 		"""
 
-	if sales_orders:
+	if sales_orders and doc.custom_delivery_request_purpose == 'Revised Payment Schedule':
 		for sales_order in sales_orders:
 			sales_order_doc = frappe.get_doc("Sales Order", sales_order["name"])
 			update_payment_schedule(sales_order_doc, doc.custom_payment_schedule, "custom_advance_amount")
@@ -85,7 +85,7 @@ def update_sales_order(doc, method=None):
 					sales_invoice_doc = frappe.get_doc("Sales Invoice", invoice)
 					update_payment_schedule(sales_invoice_doc, doc.custom_payment_schedule, "custom_advance_payment")
 
-	frappe.db.commit()					
+		frappe.db.commit()					
 	update_approver_field(doc)
 
 def update_approver_field(doc):
@@ -96,38 +96,38 @@ def update_approver_field(doc):
 		# 	frappe.db.set_value('Delivery Request', i['name'], 'custom_approver', i['modified_by'], update_modified=False)
 
 def on_cancel(doc, method=None):
-    if doc.workflow_state1 == "Rejected by AM" and not doc.cancel_reason:
-        frappe.throw("Please enter a reason before cancellation.")
+	if doc.workflow_state1 == "Rejected by AM" and not doc.cancel_reason:
+		frappe.throw("Please enter a reason before cancellation.")
 
-    sales_orders = frappe.get_all(
-        "Sales Order",
-        filters={"project": doc.custom_project, "docstatus": 1},
-        fields=["name"]
-    )
+	sales_orders = frappe.get_all(
+		"Sales Order",
+		filters={"project": doc.custom_project, "docstatus": 1},
+		fields=["name"]
+	)
 
-    def update_payment_schedule(target_doc, source_rows, custom_field):
-        """Update the payment schedule and reset custom advance field."""
-        target_doc.payment_schedule = []
-        for row in source_rows:
-            new_row = row.as_dict()
-            new_row.pop("name", None)
-            new_row["parent"] = target_doc.name
-            target_doc.append("payment_schedule", new_row)
-        
-        setattr(target_doc, custom_field, '')
-        target_doc.save()
+	def update_payment_schedule(target_doc, source_rows, custom_field):
+		"""Update the payment schedule and reset custom advance field."""
+		target_doc.payment_schedule = []
+		for row in source_rows:
+			new_row = row.as_dict()
+			new_row.pop("name", None)
+			new_row["parent"] = target_doc.name
+			target_doc.append("payment_schedule", new_row)
+		
+		setattr(target_doc, custom_field, '')
+		target_doc.save()
 
-    if sales_orders:
-        for sales_order in sales_orders:
-            sales_order_doc = frappe.get_doc("Sales Order", sales_order["name"])
-            update_payment_schedule(sales_order_doc, doc.custom_payment_from_sales_order, "custom_advance_amount")
+	if sales_orders and doc.custom_delivery_request_purpose == 'Revised Payment Schedule':
+		for sales_order in sales_orders:
+			sales_order_doc = frappe.get_doc("Sales Order", sales_order["name"])
+			update_payment_schedule(sales_order_doc, doc.custom_payment_from_sales_order, "custom_advance_amount")
 
-            sales_invoices = get_sales_invoices_from_sales_order(sales_order["name"])
-            for invoice in sales_invoices:
-                sales_invoice_doc = frappe.get_doc("Sales Invoice", invoice)
-                update_payment_schedule(sales_invoice_doc, doc.custom_payment_from_sales_order, "custom_advance_payment")
+			sales_invoices = get_sales_invoices_from_sales_order(sales_order["name"])
+			for invoice in sales_invoices:
+				sales_invoice_doc = frappe.get_doc("Sales Invoice", invoice)
+				update_payment_schedule(sales_invoice_doc, doc.custom_payment_from_sales_order, "custom_advance_payment")
 
-    frappe.db.commit()
+		frappe.db.commit()
 
 
 def on_validate(doc, method=None):

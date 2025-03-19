@@ -63,3 +63,4 @@ def validate_work_order_for_all():
     except Exception as e:
         frappe.log_error(f"Error updating Sales Orders: {str(e)}", "validate_work_order_for_all")
         return {"error": f"Something went wrong: {str(e)}"}
+

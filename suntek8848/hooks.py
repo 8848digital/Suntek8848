@@ -147,11 +147,14 @@ doc_events = {
 		"validate": "suntek8848.suntek8848.doctype.delivery_request.delivery_request.on_validate",
 	},
     "Sales Order": {
-        "validate": "suntek8848.suntek8848.doc_events.sales_order.update_outstanding_amount",
+        "validate": "suntek8848.suntek8848.doc_events.sales_order.update_outstanding_amount"
 	},
     "Stock Entry": {
         "on_submit": "suntek8848.suntek8848.doc_events.work_order.update_sales_order_status",
         "on_cancel": "suntek8848.suntek8848.doc_events.work_order.update_sales_order_status",
+    },
+    "Project": {
+        "after_insert": "suntek8848.suntek8848.doc_events.project.fetch_sales_order_fields"
     }
 }
 
@@ -269,7 +272,10 @@ fixtures = [
                         "Delivery Payment-custom_sales_amount",
                         "Sales Order-custom_dispatch_status",
                         "Sales Order-custom_advance_amount",
-                        "Sales Invoice-custom_advance_payment"
+                        "Sales Invoice-custom_advance_payment",
+                        "Project-custom_state",
+                        "Project-custom_branch",
+                        "Opportunity-custom_branch"
                     ]
                ]
         ]},
@@ -289,8 +295,46 @@ fixtures = [
                     "Delivery Request-custom_approver-in_list_view",
                     "Employee Advance-advance_account-default",
                     "Employee Advance-advance_account-fetch_from",
-                    "Sales Invoice-payment_schedule-allow_on_submit"
+                    "Sales Invoice-payment_schedule-allow_on_submit",
+                    "Sales Order-state-fetch_from",
+                    "Sales Order-branch-fetch_from",
+                    "Purchase Order-state-fetch_from",
+                    "Purchase Order-branch-fetch_from",
+                    "Purchase Receipt-state-fetch_from",
+                    "Purchase Receipt-branch-fetch_from",
+                    "Purchase Invoice-state-fetch_from",
+                    "Purchase Invoice-branch-fetch_from",
+                    "Delivery Note-state-fetch_from",
+                    "Delivery Note-branch-fetch_from",
+                    "Sales Invoice-state-fetch_from",
+                    "Sales Invoice-branch-fetch_from",
+                    "Purchase Order Item-state-fetch_from",
+                    "Purchase Order Item-branch-fetch_from",
+                    "Purchase Receipt Item-state-fetch_from",
+                    "Purchase Receipt Item-branch-fetch_from",
+                    "Purchase Invoice Item-state-fetch_from",
+                    "Purchase Invoice Item-branch-fetch_from",
+                    "Delivery Note Item-state-fetch_from",
+                    "Delivery Note Item-branch-fetch_from",
+                    "Sales Invoice Item-state-fetch_from",
+                    "Sales Invoice Item-branch-fetch_from",
+                    "Journal Entry Account-state-fetch_from",
+                    "Journal Entry Account-branch-fetch_from",
+                    "Stock Entry Detail-state-fetch_from",
+                    "Stock Entry Detail-branch-fetch_from",
+                    "Material Request Item-state-fetch_from",
+                    "Material Request Item-branch-fetch_from",
+                    "Payment Entry-state-fetch_from",
+                    "Payment Entry-branch-fetch_from"
                 ]
             ]
-        ]}
+        ]},
+        {"dt": "Accounting Dimension", "filters": [
+            [
+                "name", "in", [
+                    "State",
+                    "Branch"
+                ]
+            ]
+        ]},
 ]

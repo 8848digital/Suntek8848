@@ -1,4 +1,8 @@
 frappe.ui.form.on('Employee Advance', {
+    setup: function(frm) {
+        frm.trigger("set_default_advance_type");
+    },
+
     custom_advance_type: function(frm) {
         if (frm.doc.custom_advance_type === 'Other Expenses') {
             frappe.db.get_value('Company', frm.doc.company, 'custom_default_employee_other_expense_account', function(r) {
@@ -13,5 +17,9 @@ frappe.ui.form.on('Employee Advance', {
                 }
             });
         }
+    },
+
+    set_default_advance_type: function(frm) {
+        frm.set_value("custom_advance_type", "Other Expenses")
     }
 });

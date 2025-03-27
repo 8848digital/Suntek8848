@@ -1,0 +1,12 @@
+[
+    {
+        "document_type": "State",
+        "doctype": "Accounting Dimension",
+        "name": "State"
+    },
+    {
+        "document_type": "Branch",
+        "doctype": "Accounting Dimension",
+        "name": "Branch"
+    }
+]

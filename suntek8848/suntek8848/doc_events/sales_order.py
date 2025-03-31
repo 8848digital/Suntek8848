@@ -1,10 +1,11 @@
 import frappe
+from suntek_app.suntek.custom.sales_order import make_project, create_discom, create_subsidy, update_opportunity
+from frappe.auth import _
 
 def update_outstanding_amount(doc, method=None):
     amount = sum(val.outstanding for val in (doc.payment_schedule or []))
     doc.custom_outstanding = amount
     frappe.db.set_value('Sales Order', doc.name, 'custom_outstanding', amount, update_modified=False)
-
 
 @frappe.whitelist()
 def validate_work_order(sales_order):
@@ -64,3 +65,29 @@ def validate_work_order_for_all():
         frappe.log_error(f"Error updating Sales Orders: {str(e)}", "validate_work_order_for_all")
         return {"error": f"Something went wrong: {str(e)}"}
 
+def execute():
+    import suntek_app.suntek.custom.sales_order
+    suntek_app.suntek.custom.sales_order.auto_project_creation_on_submit = custom_auto_project_creation_on_submit
+
+@frappe.whitelist()
+def custom_auto_project_creation_on_submit(doc, method):
+    if doc.order_type != "Inter State Stock Transfer":
+        if doc.docstatus == 1 and not doc.amended_from:
+            project_make = None
+            if not frappe.db.exists("Project", {"project_name": doc.name}):
+                project_make = make_project(doc)
+                project_make.custom_poc_person_name = doc.custom_person_name
+                project_make.custom_poc_mobile_no = doc.custom_another_mobile_no
+                project_make.save()
+
+                if doc.custom_type_of_case == "Subsidy":
+                    create_subsidy(project_make)
+                    create_discom(project_make)
+                elif doc.custom_type_of_case == "Non Subsidy":
+                    create_discom(project_make)
+
+        elif doc.amended_from and doc.project:
+            project = frappe.get_doc("Project", doc.project)
+            project.db_set("sales_order", doc.name)
+
+        update_opportunity(doc)

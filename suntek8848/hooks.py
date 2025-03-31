@@ -22,6 +22,10 @@ app_license = "mit"
 # ]
 
 # Includes in <head>
+
+from suntek8848.suntek8848.doc_events.sales_order import execute
+execute()
+
 # ------------------
 
 # include js, css files in header of desk.html
@@ -183,6 +187,7 @@ doc_events = {
 # -------
 
 # before_tests = "suntek8848.install.before_tests"
+after_migrate = "suntek8848.migrate.after_migrate"
 
 # Overriding Methods
 # ------------------------------

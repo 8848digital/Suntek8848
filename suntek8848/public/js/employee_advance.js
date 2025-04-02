@@ -1,6 +1,8 @@
 frappe.ui.form.on('Employee Advance', {
     onload: function(frm) {
-        frm.trigger("set_default_advance_type");
+        setTimeout(() => {
+            frm.trigger("set_default_advance_type");
+          }, 100);
     },
 
     custom_advance_type: function(frm) {

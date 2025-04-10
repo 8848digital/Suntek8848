@@ -27,9 +27,10 @@
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Data",
+   "fieldtype": "Select",
    "label": "series",
-   "options": "DR-.####"
+   "options": "DR-.####",
+   "default": "DR-.####"
   },
   {
    "fieldname": "department",

@@ -123,9 +123,9 @@ doctype_js = {"Sales Order" : "public/js/sales_order.js",
 # -----------
 # Permissions evaluated in scripted ways
 
-permission_query_conditions = {
-	"Delivery Request": "suntek8848.suntek8848.permissions.delivery_request.update_permissions",
-}
+# permission_query_conditions = {
+# 	"Delivery Request": "suntek8848.suntek8848.permissions.delivery_request.update_permissions",
+# }
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
